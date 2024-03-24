@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <style>
+        /* CSS styles can be added inline for simplicity */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .task-input {
+            margin-bottom: 10px;
+        }
+
+        input[type="text"], input[type="datetime-local"] {
+            width: calc(70% - 5px); /* Adjusted width for both inputs */
+            padding: 10px;
+            margin-right: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 10px;
+            margin-bottom: 5px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .completed {
+            text-decoration: line-through;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Task Manager</h1>
+        <div class="task-input">
+            <input type="text" id="taskInput" placeholder="Add new task">
+            <!-- Use type="datetime-local" for date-time picker -->
+            <input type="datetime-local" id="deadlineInput">
+            <button onclick="addTask()">Add Task</button>
+        </div>
+        <div class="task-filters">
+            <!-- Buttons for filtering tasks -->
+            <button onclick="filterTasks('all')">Show All</button>
+            <button onclick="filterTasks('active')">Show Active</button>
+            <button onclick="filterTasks('completed')">Show Completed</button>
+        </div>
+        <ul id="taskList"></ul>
+    </div>
+    <script>
+        // JavaScript logic can be added inline for simplicity
+        // Function to add a new task
+        function addTask() {
+            var taskInput = document.getElementById("taskInput");
+            var taskText = taskInput.value.trim();
+            var deadlineInput = document.getElementById("deadlineInput");
+            var deadlineText = deadlineInput.value.trim();
+
+            if (taskText === "") {
+                alert("Please enter a task!");
+                return;
+            }
+
+            var taskList = document.getElementById("taskList");
+            var li = document.createElement("li");
+            li.textContent = taskText;
+
+            // Add deadline to task if provided
+            if (deadlineText !== "") {
+                var deadline = document.createElement("span");
+                deadline.textContent = " | Deadline: " + deadlineText;
+                li.appendChild(deadline);
+            }
+
+            // Add a button to mark task as completed
+            var completeButton = document.createElement("button");
+            completeButton.textContent = "Complete";
+            completeButton.onclick = function() {
+                li.classList.toggle("completed");
+            };
+
+            // Add a button to delete task
+            var deleteButton = document.createElement("button");
+            deleteButton.textContent = "Delete";
+            deleteButton.onclick = function() {
+                li.remove();
+            };
+
+            li.appendChild(completeButton);
+            li.appendChild(deleteButton);
+            taskList.appendChild(li);
+
+            taskInput.value = "";
+            deadlineInput.value = ""; // Clear deadline input after adding task
+        }
+
+        // Function to filter tasks
+        function filterTasks(filterType) {
+            var taskList = document.getElementById("taskList").getElementsByTagName("li");
+
+            for (var i = 0; i < taskList.length; i++) {
+                var task = taskList[i];
+                var isCompleted = task.classList.contains("completed");
+
+                if (filterType === "active" && isCompleted) {
+                    task.style.display = "none";
+                } else if (filterType === "completed" && !isCompleted) {
+                    task.style.display = "none";
+                } else {
+                    task.style.display = "block";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
